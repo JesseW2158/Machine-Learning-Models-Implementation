@@ -74,7 +74,14 @@ namespace ActivationFunctions
             for (int i = 0; i < input.size(); ++i)
                 v(i) = exp(-(BaseSigmoid<InputOutputType>::beta(i) * input(i) + BaseSigmoid<InputOutputType>::beta0(i)));
 
-            return (InputOutputType::Ones(input.size()) + v).cwiseInverse();
+            return (InputOutputType::Ones(v.size()) + v).cwiseInverse();
         }
+
+        InputOutputType derivative(const InputOutputType& input)
+		{
+			const InputOutputType fx = operator()(input);
+
+			return fx.cwiseProduct(InputOutputType::Ones(fx.rows(), fx.cols()) - fx);
+		}
     };
 }
