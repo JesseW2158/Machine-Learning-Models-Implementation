@@ -9,12 +9,22 @@ class Linear:
     def __call__(self, x: Union[Array]):
         return x
     
-    # BASED OFF SHAPE OF X, CONSTRUCT NEW ARRAY WITH ONLY 1
     def gradient(self, x: Union[Array]):
-        return x.shape()
+        return Array(self.__gradient(x))
+        
+    def __gradient(self, x: Union[Array]):
+        gradient_list = []
+        
+        if len(x.shape()) == 1:
+            return [1 for _ in range(x.shape()[0])]
+        
+        for element in x.array:
+            gradient_list.append(self.__gradient(Array(element)))
+        
+        return gradient_list
     
     def __str__(self) -> str:
-        return "Linear"
+        return "Linear Activation"
     
 class BinaryStep:
     def __call__(self, x: Union[Array]):
@@ -24,7 +34,7 @@ class BinaryStep:
         return 0
     
     def __str__(self) -> str:
-        return "BinaryStep"
+        return "BinaryStep Activation"
     
 class Sigmoid:
     def __call__(self, x: Union[Array]):
@@ -34,7 +44,7 @@ class Sigmoid:
         return self(x) * (1 - self(x))
     
     def __str__(self) -> str:
-        return "Sigmoid"
+        return "Sigmoid Activation"
     
 class Tanh:
     def __call__(self, x: Union[Array]):
@@ -44,7 +54,7 @@ class Tanh:
         return 1 - self(x) ** 2
     
     def __str__(self) -> str:
-        return "Tanh"
+        return "Tanh Activation"
     
 class SoftSign:
     def __call__(self, x: Union[Array]):
@@ -54,7 +64,7 @@ class SoftSign:
         return 1 / (1 + abs(x)) ** 2
     
     def __str__(self) -> str:
-        return "SoftSign"
+        return "SoftSign Activation"
     
 class ReLU:
     def __call__(self, x: Union[Array]):
@@ -64,7 +74,7 @@ class ReLU:
         return 0 if x < 0 else 1
     
     def __str__(self) -> str:
-        return "ReLU"
+        return "ReLU Activation"
     
 class SoftPlus:
     def __call__(self, x: Union[Array]):
@@ -74,7 +84,7 @@ class SoftPlus:
         return 1 / (1 + math.e ** -x)
     
     def __str__(self) -> str:
-        return "SoftPlus"
+        return "SoftPlus Activation"
 
 class ELU:
     def __call__(self, x: Union[Array], alpha=0.2) -> float:
@@ -84,7 +94,7 @@ class ELU:
         return alpha * (math.e ** x) if x <= 0 else 1
     
     def __str__(self) -> str:
-        return "ELU"
+        return "ELU Activation"
     
 class SELU:
     def __init__(self) -> None:
@@ -98,7 +108,7 @@ class SELU:
         return self.scale * ELU().gradient(x)
     
     def __str__(self) -> str:
-        return "SELU"
+        return "SELU Activation"
     
 class LeakyReLU:
     def __init__(self, alpha=0.01) -> None:
@@ -111,7 +121,7 @@ class LeakyReLU:
         return self.alpha if x < 0 else 1
     
     def __str__(self) -> str:
-        return "Leaky ReLU"
+        return "Leaky ReLU Activation"
     
 class PReLU:
     def __init__(self, alpha) -> None:
@@ -124,7 +134,7 @@ class PReLU:
         return self.alpha if x < 0 else 1
     
     def __str__(self) -> str:
-        return "PReLU"
+        return "PReLU Activation"
     
 class SiLU:
     def __call__(self, x: Union[Array]):
@@ -134,7 +144,7 @@ class SiLU:
         return (1 + math.e ** -x + x * math.e ** -x) / (1 + math.e ** -x) ** 2
     
     def __str__(self) -> str:
-        return "SiLU"
+        return "SiLU Activation"
 
 class Sinusoid:
     def __call__(self, x: Union[Array]):
@@ -144,7 +154,7 @@ class Sinusoid:
         return math.cos(x)
     
     def __str__(self) -> str:
-        return "Sinusoid"
+        return "Sinusoid Activation"
     
 # TODO
 # class Softmax:

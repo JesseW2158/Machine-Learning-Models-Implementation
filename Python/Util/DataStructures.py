@@ -21,10 +21,12 @@ class Array:
             return all(type(element) == int for element in array)
         
         if not isinstance(array[0], list):
+            print("here1")
             return False
         
         for element in array:
             if not self.__assert_int_array(element):
+                print("here2")
                 return False
             
         return True
@@ -70,7 +72,7 @@ class Array:
         return(return_str + '\n' + ' ' * depth + ']')
         
     def shape(self) -> tuple:
-        return tuple(self.__shape(self.array))
+        return self.__shape(self.array)
     
     def __shape(self, array:list) -> int:
         if isinstance(array[0], int):
