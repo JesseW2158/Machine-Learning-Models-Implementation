@@ -1,9 +1,10 @@
+/.vscode
 /C++/Main.cpp
 /C++/Main.exe
-/.vscode
 /C++/Main.ilk
 /C++/Main.obj
 /C++/Main.pdb
 /C++/vc140.pdb
 /Python/test.py
 /Python/Math/__pycache__/*
+/Python/Util/__pycache__/*

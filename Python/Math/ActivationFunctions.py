@@ -1,16 +1,18 @@
 import math
 from Util.DataStructures import *
 from typing import Union
-
-# ADD IN WHAT THE PURPOSE OF EACH ACTIVATION FUNCTION IS
-# TEST ALL ACTIVATION FUNCTIONS
+import builtins
 
 class Linear:
     def __call__(self, x: Union[Array]):
         return x
     
     def gradient(self, x: Union[Array]):
-        return Array(self.__gradient(x))
+        match x:
+            case Array():
+                return Array(self.__gradient(x))
+            case int():
+                return 0
         
     def __gradient(self, x: Union[Array]):
         gradient_list = []
@@ -28,40 +30,161 @@ class Linear:
     
 class BinaryStep:
     def __call__(self, x: Union[Array]):
-        return 1 if x >= 0 else 0
+        match x:
+            case Array():
+                return Array(self.__call(x))
+            case int():
+                return 1 if x >= 0 else 0
+    
+    def __call(self, x: Union[Array]):
+        call_list = []
+        
+        if len(x.shape()) == 1:
+            return [1 if element >= 0 else 0 for element in x.array]
+        
+        for element in x.array:
+            call_list.append(self.__call(Array(element)))
+        
+        return call_list
     
     def gradient(self, x: Union[Array]):
-        return 0
+        match x:
+            case Array():
+                return Array(self.__gradient(x))
+            case int():
+                return 0
+        
+    
+    def __gradient(self, x: Union[Array]):
+        gradient_list = []
+        
+        if len(x.shape()) == 1:
+            return [0 for _ in range(x.shape()[0])]
+        
+        for element in x.array:
+            gradient_list.append(self.__gradient(Array(element)))
+        
+        return gradient_list
     
     def __str__(self) -> str:
         return "BinaryStep Activation"
     
 class Sigmoid:
-    def __call__(self, x: Union[Array]):
-        return 1 / 1 + (math.e ** -x)
+    def __call__(self, x: Union[Array, int]):
+        match x:
+            case Array():
+                return Array(self.__call(x))
+            case int():
+                return 1 / (1 + math.e ** -x)
     
+    def __call(self, x: Union[Array, int]):
+        call_list = []
+        
+        if len(x.shape()) == 1:
+            return [1 / (1 + math.e ** -element) for element in x.array]
+        
+        for element in x.array:
+            call_list.append(self.__call(Array(element)))
+        
+        return call_list
+            
     def gradient(self, x: Union[Array]):
-        return self(x) * (1 - self(x))
+        match x:
+            case Array():
+                return Array(self.__gradient(x))
+            case int():
+                return self(x) * (1 - self(x))
+    
+    def __gradient(self, x: Union[Array]):
+        gradient_list = []
+        
+        if len(x.shape()) == 1:
+            return [self(element) * (1 - self(element)) for element in x.array]
+        
+        for element in x.array:
+            gradient_list.append(self.__gradient(Array(element)))
+        
+        return gradient_list
     
     def __str__(self) -> str:
         return "Sigmoid Activation"
     
 class Tanh:
-    def __call__(self, x: Union[Array]):
-        return (math.e ** x - math.e ** -x) / (math.e ** x + math.e ** -x)
-
+    def __call__(self, x: Union[Array, int]):
+        match x:
+            case Array():
+                return Array(self.__call(x))
+            case int():
+                return (math.e ** x - math.e ** -x) / (math.e ** x + math.e ** -x)
+            
+    def __call(self, x: Union[Array, int]):
+        call_list = []
+        
+        if len(x.shape()) == 1:
+            return [(math.e ** element - math.e ** -element) / (math.e ** element + math.e ** -element) for element in x.array]
+        
+        for element in x.array:
+            call_list.append(self.__call(Array(element)))
+        
+        return call_list
+    
     def gradient(self, x: Union[Array]):
-        return 1 - self(x) ** 2
+        match x:
+            case Array():
+                return Array(self.__gradient(x))
+            case int():
+                return 1 - self(x) ** 2
+    
+    def __gradient(self, x: Union[Array]):
+        gradient_list = []
+        
+        if len(x.shape()) == 1:
+            return [1 - self(element) ** 2 for element in x.array]
+        
+        for element in x.array:
+            gradient_list.append(self.__gradient(Array(element)))
+        
+        return gradient_list
     
     def __str__(self) -> str:
         return "Tanh Activation"
     
 class SoftSign:
-    def __call__(self, x: Union[Array]):
-        return x / (1 + abs(x))
+    def __call__(self, x: Union[Array, int]):
+        match x:
+            case Array():
+                return Array(self.__call(x))
+            case int():
+                return x / (1 + abs(x))
+    
+    def __call(self, x: Union[Array, int]):
+        call_list = []
+        
+        if len(x.shape()) == 1:
+            return [element / (1 + abs(element)) for element in x.array]
+        
+        for element in x.array:
+            call_list.append(self.__call(Array(element)))
+        
+        return call_list
     
     def gradient(self, x: Union[Array]):
-        return 1 / (1 + abs(x)) ** 2
+        match x:
+            case Array():
+                return Array(self.__gradient(x))
+            case int():
+                return 1 / (1 + abs(x)) ** 2
+    
+    def __gradient(self, x: Union[Array, int]):
+        gradient_list = []
+        
+        if len(x.shape()) == 1:
+            return [1 / (1 + abs(element)) ** 2 for element in x.array]
+        
+        for element in x.array:
+            gradient_list.append(self.__gradient(Array(element)))
+        
+        return gradient_list
     
     def __str__(self) -> str:
         return "SoftSign Activation"

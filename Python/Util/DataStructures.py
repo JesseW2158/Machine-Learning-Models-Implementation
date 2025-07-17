@@ -17,8 +17,8 @@ class Array:
         self.array = array
         
     def __assert_int_array(self, array):
-        if isinstance(array[0], int) :
-            return all(type(element) == int for element in array)
+        if isinstance(array[0], int) or isinstance(array[0], float):
+            return all(type(element) == int for element in array) or all(type(element) == float for element in array)
         
         if not isinstance(array[0], list):
             print("here1")
